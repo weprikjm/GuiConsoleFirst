@@ -488,7 +488,7 @@ p2SString& GuiInputText::GetText()
 
 
 //---Gui Console------------------------------------
-GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, const rectangle dotBox, const iPoint parsePos, int letterSize, SDL_Texture* texture, int alpha) : text(default_text), dot(texture, dotBox)
+GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, const rectangle dotBox, const iPoint parsePos, int letterSize, SDL_Texture* texture, int alpha)
 {
 	this->parsePos = parsePos;
 	this->letterSize = letterSize;
@@ -507,7 +507,11 @@ GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, con
 
 
 	if (!SDL_SetTextureAlphaMod(texture, alpha))
+	{
 		LOG("Alpha not applied");
+	//	App->scene->console->LogConsole("Alpha not applied");
+	}
+		
 
 	blackBackground = new GuiImage(texture, { 0, 0, 1024, 256 });
 
@@ -561,7 +565,7 @@ void GuiConsole::Draw() const
 	if (isVisible)
 	{
 		blackBackground->Draw();
-		dot.Draw();
+	
 		// render text
 		if (InputConsole->GetText().Length() > 0)
 			InputConsole->Draw();
@@ -620,10 +624,6 @@ bool GuiConsole::CheckCommand(p2SString& possibleCommand)
 		char* nextString;
 		string firstStr = strtok_s((char*)strToEvaluate.c_str(), " ", &nextString);
 		
-		auto it = App->consoleCommands.find(firstStr);
-
-	
-		//{
 			commandSplitted.add(firstStr);
 			size_t n = std::count(strCopy.begin(), strCopy.end(), ' ');
 
@@ -637,13 +637,15 @@ bool GuiConsole::CheckCommand(p2SString& possibleCommand)
 			}
 			else
 			{
-				LOG("%s",strToEvaluate.c_str());
+				LOG("%s", strToEvaluate.c_str());
+				//App->scene->console->LogConsole("Holi Console\n");
 			}
 			App->scene->console->ChooseMethod(commandSplitted);
 			return true;
-		//}
+			/*
+			auto it = 0;
 			if (it != App->consoleCommands.end())
-				return false;
+				return false;*/
 	}
 }
 
@@ -714,10 +716,16 @@ void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 					App->scene->mapPreparation(command.GetString());
 			}
 		}
+		else
+		{
+			
+		}
 	}
 }
 
 void GuiConsole::LogConsole(const char* string)
 {
 	pastTextStr += string;
+	//positionPastText.y -= 35;
+	//this->pastText->SetLocalPos(0, positionPastText.y);
 }

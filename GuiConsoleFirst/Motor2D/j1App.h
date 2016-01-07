@@ -133,7 +133,7 @@ private:
 	//Console
 public:
 	std::map<std::string, const char*> consoleCommands;
-};
+}; 
 
 extern j1App* App; // No student is asking me about that ... odd :-S
 
