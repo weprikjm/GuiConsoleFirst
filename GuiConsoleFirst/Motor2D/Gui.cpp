@@ -13,6 +13,7 @@
 #include "p2DynArray.h"
 #include "p2Log.h"
 #include "j1Map.h"
+#include "j1Window.h"
 
 
 // class Gui ---------------------------------------------------
@@ -638,7 +639,6 @@ bool GuiConsole::CheckCommand(p2SString& possibleCommand)
 			else
 			{
 				LOG("%s", strToEvaluate.c_str());
-				//App->scene->console->LogConsole("Holi Console\n");
 			}
 			App->scene->console->ChooseMethod(commandSplitted);
 			return true;
@@ -662,8 +662,6 @@ void GuiConsole::Endline()
 	this->pastText->TextReplace(pastTextStr.c_str());
 	positionPastText.y -= 35;
 	this->pastText->SetLocalPos(0, positionPastText.y);
-
-
 }
 
 void GuiInputText::ResetInput()
@@ -698,13 +696,25 @@ void GuiConsole::listCommands()
 void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 {
 	p2List_item<string>* firstCommand = commandSplitted.At(0);
-	p2List_item<string>* secondCommand = commandSplitted.At(1);
+	p2SString p2firstCommand = firstCommand->data.c_str();
+	p2List_item<string>* secondCommand = NULL;
+	p2SString p2SecondCommand;
+	if (commandSplitted.count() > 1)
+	{
+		secondCommand = commandSplitted.At(1);
+		p2SecondCommand = secondCommand->data.c_str();
+	}
+	
+		
 	
 	if (strcmp(firstCommand->data.c_str(), "quit") == 0)
 		App->scene->quitFlag();
 
 	if (strcmp(firstCommand->data.c_str(), "list") == 0)
 		listCommands();
+	if (strcmp(firstCommand->data.c_str(), "cameraSpeed") == 0)
+		App->scene->changeSpeed(p2SecondCommand);
+
 
 	if (strcmp(firstCommand->data.c_str(), "map") == 0)
 	{

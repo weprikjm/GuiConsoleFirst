@@ -5,24 +5,52 @@ CVar::CVar(const p2SString& nameIdentifier)
 	sValue.create(nameIdentifier.GetString());
 }
 
-int CVar::SetValueToInt(p2SString& string)
-{
-	return iValue = atoi(string.GetString());
-}
-int CVar::GetValueToInt()
-{
-	return iValue;
-}
-
 const char* CVar::GetValueToString()
 {
 	return sValue.GetString();
 }
 
-/*
-p2SString& CVar::operator=(const p2SString& command)
+
+
+iCVar::iCVar(p2SString& sValue) : CVar(sValue)
 {
-
-
+	iValue = atoi(sValue.GetString());
 }
-*/
+
+void iCVar::SetValueToInt(p2SString& value)
+{
+	iValue = atoi(value.GetString());
+}
+int iCVar::GetValueToInt()
+{
+	return iValue;
+}
+
+iCVar::iCVar(int iValue)
+{
+	this->iValue = iValue;
+}
+
+
+
+
+
+fCVar::fCVar(p2SString& sValue) : CVar(sValue)
+{
+	fValue = atof(sValue.GetString());
+}
+
+
+void fCVar::SetValueToFloat(p2SString& value)
+{
+	fValue = atof(value.GetString());
+}
+float fCVar::GetValueToFloat()
+{
+	return fValue;
+}
+
+fCVar::fCVar(float fValue)
+{
+	this->fValue = fValue;
+}
