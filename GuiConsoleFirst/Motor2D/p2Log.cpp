@@ -19,5 +19,5 @@ void log(const char file[], int line, const char* format, ...)
 	strcpy_s(str, 4095 ,tmp_string2);
 	str[4094] = '\0';
 
-	//logInit += tmp_string2;
+	
 }

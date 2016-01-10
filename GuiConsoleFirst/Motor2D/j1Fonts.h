@@ -7,7 +7,6 @@
 
 #define DEFAULT_FONT "fonts/open_sans/OpenSans-Regular.ttf"
 #define DEFAULT_FONT_SIZE 12
-#define DEFAULT_FONT_HEIGTH 17
 
 struct SDL_Texture;
 struct _TTF_Font;
@@ -38,10 +37,8 @@ public:
 
 public:
 
-	p2List<_TTF_Font*>	fonts; 
+	p2List<_TTF_Font*>	fonts;
 	_TTF_Font*			default;
-	int					fontHeight;
-
 };
 
 

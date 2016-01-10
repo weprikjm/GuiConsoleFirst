@@ -36,7 +36,6 @@ bool j1Fonts::Awake(pugi::xml_node& conf)
 		default = Load(path, size);
 	}
 
-	fontHeight = TTF_FontHeight(default);
 	return ret;
 }
 
