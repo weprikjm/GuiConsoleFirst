@@ -1,7 +1,7 @@
 #ifndef __CVAR_H__
 #define __CVAR_H__
 
-#include "p2SString.h"
+//#include "p2SString.h"
 #include <map>
 
 class CVar
@@ -14,6 +14,7 @@ public:
 	const char* GetValueToString();
 
 public:
+
 	p2SString sValue;
 };
 

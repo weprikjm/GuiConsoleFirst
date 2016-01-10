@@ -357,8 +357,7 @@ void GuiInputText::UpdateConsole(const Gui* mouse_hover, const Gui* focus)
 					App->font->CalcSize(selected.GetString(), cursor_coords.x, cursor_coords.y);
 				}
 				else
-				{
-					cursor_coords.x = 0;
+				{					cursor_coords.x = 0;
 				}
 			}
 		
@@ -510,7 +509,6 @@ GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, con
 	if (!SDL_SetTextureAlphaMod(texture, alpha))
 	{
 		LOG("Alpha not applied");
-	//	App->scene->console->LogConsole("Alpha not applied");
 	}
 		
 
@@ -527,11 +525,12 @@ GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, con
 	commandList.add("quit");
 	commandList.add("list");
 	commandList.add("map");
-	
+	commandList.add("cameraSpeed");
+	commandList.BubbleSort();
 	positionPastText = { 0, 0 };
-	//pastText->SetText(" ");
+
 }
-//300 i 11 coords
+
 
 
 void GuiConsole::Update(const Gui* mouse_hover, const Gui* focus)
@@ -660,7 +659,7 @@ void GuiConsole::Endline()
 
 
 	this->pastText->TextReplace(pastTextStr.c_str());
-	positionPastText.y -= 35;
+	positionPastText.y -= DEFAULT_FONT_HEIGTH;
 	this->pastText->SetLocalPos(0, positionPastText.y);
 }
 
@@ -682,15 +681,16 @@ GuiInputText* GuiConsole::GetInput() const
 
 void GuiConsole::listCommands()
 {
-	commandList.BubbleSort();
+	
 	for (int i = 0; i < commandList.count(); i++)
 	{
 		LogConsole(commandList.At(i)->data.c_str());
 		
 		LogConsole("\n");
-		positionPastText.y -= 35;
-		this->pastText->SetLocalPos(0, positionPastText.y);
+		positionPastText.y -= DEFAULT_FONT_HEIGTH;
 	}
+	
+	this->pastText->SetLocalPos(0, positionPastText.y);
 }
 
 void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
@@ -704,8 +704,6 @@ void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 		secondCommand = commandSplitted.At(1);
 		p2SecondCommand = secondCommand->data.c_str();
 	}
-	
-		
 	
 	if (strcmp(firstCommand->data.c_str(), "quit") == 0)
 		App->scene->quitFlag();
@@ -736,6 +734,4 @@ void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 void GuiConsole::LogConsole(const char* string)
 {
 	pastTextStr += string;
-	//positionPastText.y -= 35;
-	//this->pastText->SetLocalPos(0, positionPastText.y);
 }

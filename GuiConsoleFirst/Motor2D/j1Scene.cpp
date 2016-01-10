@@ -89,7 +89,7 @@ bool j1Scene::Start()
 	rectangle consoleBox = {0,0,width,250};
 	rectangle dot = { 300, 11, 20, 20 };
 	iPoint parsPos = {-8,13 };
-	blackBackground = App->tex->Load("GUI/consoleBlackWindowAlpha.png");
+	blackBackground = App->tex->Load("textures/GUI/consoleBlackWindowAlpha.png");
 	console = App->gui->CreateConsole("Command me",consoleBox, dot, parsPos, offsetSide, blackBackground, 128);
 
 
@@ -139,11 +139,11 @@ bool j1Scene::Update(float dt)
 	
 	// -------
 	
-	if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		App->LoadGame("save_game.xml");
+	//if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+		//App->LoadGame("save_game.xml");
 
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-		App->SaveGame("save_game.xml");
+	//if(App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+		//App->SaveGame("save_game.xml");
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		App->render->camera.y += floor(speed->GetValueToFloat() * dt);
