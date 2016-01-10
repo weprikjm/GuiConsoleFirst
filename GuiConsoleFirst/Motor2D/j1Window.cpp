@@ -37,10 +37,8 @@ bool j1Window::Awake(pugi::xml_node& config)
 		bool borderless = config.child("borderless").attribute("value").as_bool(false);
 		bool resizable = config.child("resizable").attribute("value").as_bool(false);
 		bool fullscreen_window = config.child("fullscreen_window").attribute("value").as_bool(false);
-		
-		width = new iCVar((p2SString)config.child("resolution").attribute("width").as_string());
 
-		//width = config.child("resolution").attribute("width").as_int(640);
+		width = config.child("resolution").attribute("width").as_int(640);
 		height = config.child("resolution").attribute("height").as_int(480);
 		scale = config.child("resolution").attribute("scale").as_int(1);
 
@@ -64,7 +62,7 @@ bool j1Window::Awake(pugi::xml_node& config)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(App->GetTitle(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width->GetValueToInt(), height, flags);
+		window = SDL_CreateWindow(App->GetTitle(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
 		if(window == NULL)
 		{
@@ -91,8 +89,6 @@ bool j1Window::CleanUp()
 	{
 		SDL_DestroyWindow(window);
 	}
-	
-	delete width;
 
 	//Quit SDL subsystems
 	SDL_Quit();
@@ -108,16 +104,11 @@ void j1Window::SetTitle(const char* new_title)
 
 void j1Window::GetWindowSize(uint& width, uint& height) const
 {
-	width = this->width->GetValueToInt();
+	width = this->width;
 	height = this->height;
 }
 
 uint j1Window::GetScale() const
 {
 	return scale;
-}
-
-void j1Window::changeWidth(p2SString& width)
-{
-	this->width->SetValueToInt(width);
 }

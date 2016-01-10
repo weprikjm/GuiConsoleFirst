@@ -122,6 +122,8 @@ bool j1App::Awake()
 
 		consoleCommands.insert(std::pair<std::string, const char*>("quit", "false"));
 
+
+
 	}
 
 	PERF_PEEK(ptimer);

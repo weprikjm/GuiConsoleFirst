@@ -48,7 +48,7 @@ void j1Scene::mapPreparation(const char* mapName)
 // Called before the first frame
 bool j1Scene::Start()
 {
-	mapPreparation("iso2.tmx");
+	mapPreparation("iso.tmx");
 
 	debug_tex = App->tex->Load("maps/path2.png");
 	Gui* window = App->gui->CreateImage({0, 512, 483, 512});
@@ -65,6 +65,7 @@ bool j1Scene::Start()
 
 	// EXERCISE 5
 	bar = App->gui->CreateHScrollBar({0, 11, 307, 11}, {805, 318, 26, 15}, {0, 0, -0, 0}, {0, 0});
+	//bar = App->gui->CreateHScrollBar({0, 11, 307, 11}, {805, 318, 26, 15}, {-5, 0, -10, 0}, {0, -2});
 	bar->parent = window;
 	bar->Center();
 	p = bar->GetLocalPos();
@@ -91,13 +92,6 @@ bool j1Scene::Start()
 	iPoint parsPos = {-8,13 };
 	blackBackground = App->tex->Load("GUI/consoleBlackWindowAlpha.png");
 	console = App->gui->CreateConsole("Command me",consoleBox, dot, parsPos, offsetSide, blackBackground, 128);
-
-
-	//CVARS
-	speed = new fCVar(200.0f);
-
-
-
 
 	return true;
 }
@@ -146,16 +140,16 @@ bool j1Scene::Update(float dt)
 		App->SaveGame("save_game.xml");
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		App->render->camera.y += floor(speed->GetValueToFloat() * dt);
+		App->render->camera.y += floor(200.0f * dt);
 
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		App->render->camera.y -= floor(speed->GetValueToFloat() * dt);
+		App->render->camera.y -= floor(200.0f * dt);
 
 	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		App->render->camera.x += floor(speed->GetValueToFloat() * dt);
+		App->render->camera.x += floor(200.0f * dt);
 
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		App->render->camera.x -= floor(speed->GetValueToFloat()* dt);
+		App->render->camera.x -= floor(200.0f * dt);
 
 	App->map->Draw();
 	
@@ -237,10 +231,6 @@ Dark Button coords are {645,165,229,69} - normal state
 		sprintf_s(n, 20, "Value: %0.2f", bar->GetValue());
 		title->SetText(n);
 	}
-}
 
 
-void j1Scene::changeSpeed(p2SString& value)
-{
-	speed->SetValueToFloat(value);
 }

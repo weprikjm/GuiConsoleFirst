@@ -25,10 +25,8 @@ bool j1Map::Awake(pugi::xml_node& config)
 	folder.create(config.child("folder").child_value());
 	p2SString* map1 = new p2SString("iso.tmx");
 	p2SString* map2 = new p2SString("hello2.tmx");
-	p2SString* map3 = new p2SString("iso2.tmx");
 	mapNames.add(map1);
 	mapNames.add(map2);
-	mapNames.add(map3);
 
 	return ret;
 }
@@ -202,8 +200,7 @@ bool j1Map::Load(const char* file_name)
 	int size = App->fs->Load(tmp.GetString(), &buf);
 	pugi::xml_parse_result result = map_file.load_buffer(buf, size);
 
-	if (buf == NULL)
-		RELEASE(buf);
+	RELEASE(buf);
 
 	if(result == NULL)
 	{

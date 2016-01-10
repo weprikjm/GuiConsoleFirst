@@ -13,7 +13,6 @@
 #include "p2DynArray.h"
 #include "p2Log.h"
 #include "j1Map.h"
-#include "j1Window.h"
 
 
 // class Gui ---------------------------------------------------
@@ -215,22 +214,11 @@ void GuiLabel::SetText(const char* text)
 	SetSize(w, h);
 }
 
-void GuiLabel::TextReplace(p2List<p2SString>& passedTextList)
+void GuiLabel::TextReplace(const char* text)
 {
 	SDL_DestroyTexture(texture);
-	p2SString textToFill;
 
-	p2List_item<p2SString>* tmp = passedTextList.start;
-
-	while(tmp)
-	{
-		textToFill += tmp->data;
-		tmp = tmp->next;
-	}
-
-
-
-	texture = App->font->PrintConsolePassedText(textToFill.GetString());
+	texture = App->font->PrintConsolePassedText(text);
 	int w, h;
 	App->tex->GetSize(texture, (uint&)w, (uint&)h);
 	SetSize(w, h);
@@ -500,7 +488,7 @@ p2SString& GuiInputText::GetText()
 
 
 //---Gui Console------------------------------------
-GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, const rectangle dotBox, const iPoint parsePos, int letterSize, SDL_Texture* texture, int alpha)
+GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, const rectangle dotBox, const iPoint parsePos, int letterSize, SDL_Texture* texture, int alpha) : text(default_text), dot(texture, dotBox)
 {
 	this->parsePos = parsePos;
 	this->letterSize = letterSize;
@@ -519,11 +507,7 @@ GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, con
 
 
 	if (!SDL_SetTextureAlphaMod(texture, alpha))
-	{
 		LOG("Alpha not applied");
-	//	App->scene->console->LogConsole("Alpha not applied");
-	}
-		
 
 	blackBackground = new GuiImage(texture, { 0, 0, 1024, 256 });
 
@@ -538,12 +522,11 @@ GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, con
 	commandList.add("quit");
 	commandList.add("list");
 	commandList.add("map");
-	commandList.add("cameraSpeed");
 	
 	positionPastText = { 0, 0 };
 	//pastText->SetText(" ");
 }
-
+//300 i 11 coords
 
 
 void GuiConsole::Update(const Gui* mouse_hover, const Gui* focus)
@@ -578,7 +561,7 @@ void GuiConsole::Draw() const
 	if (isVisible)
 	{
 		blackBackground->Draw();
-	
+		dot.Draw();
 		// render text
 		if (InputConsole->GetText().Length() > 0)
 			InputConsole->Draw();
@@ -637,6 +620,10 @@ bool GuiConsole::CheckCommand(p2SString& possibleCommand)
 		char* nextString;
 		string firstStr = strtok_s((char*)strToEvaluate.c_str(), " ", &nextString);
 		
+		auto it = App->consoleCommands.find(firstStr);
+
+	
+		//{
 			commandSplitted.add(firstStr);
 			size_t n = std::count(strCopy.begin(), strCopy.end(), ' ');
 
@@ -650,32 +637,31 @@ bool GuiConsole::CheckCommand(p2SString& possibleCommand)
 			}
 			else
 			{
-				LOG("%s", strToEvaluate.c_str());
+				LOG("%s",strToEvaluate.c_str());
 			}
 			App->scene->console->ChooseMethod(commandSplitted);
 			return true;
-			/*
-			auto it = 0;
+		//}
 			if (it != App->consoleCommands.end())
-				return false;*/
+				return false;
 	}
 }
 
 void GuiConsole::Endline()
 {
-	pastTextStr.add(InputConsole->GetText());
+	pastTextStr.append(InputConsole->GetText().GetString());
 	
 	//InputConsole->ResetInput();
-	p2SString endline;
-	endline.create("\n");
-	pastTextStr.add(endline);
+	pastTextStr.append("\n");
 
 	App->input->FlushTextInput();
 
 
-	this->pastText->TextReplace(pastTextStr);
-	positionPastText.y -= DEFAULT_FONT_HEIGHT;
+	this->pastText->TextReplace(pastTextStr.c_str());
+	positionPastText.y -= 35;
 	this->pastText->SetLocalPos(0, positionPastText.y);
+
+
 }
 
 void GuiInputText::ResetInput()
@@ -684,7 +670,7 @@ void GuiInputText::ResetInput()
 	
 	input.create(str2->GetString());
 
-	//text.TextReplace("\0");
+	text.TextReplace("\0");
 }
 
 
@@ -710,25 +696,13 @@ void GuiConsole::listCommands()
 void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 {
 	p2List_item<string>* firstCommand = commandSplitted.At(0);
-	p2SString p2firstCommand = firstCommand->data.c_str();
-	p2List_item<string>* secondCommand = NULL;
-	p2SString p2SecondCommand;
-	if (commandSplitted.count() > 1)
-	{
-		secondCommand = commandSplitted.At(1);
-		p2SecondCommand = secondCommand->data.c_str();
-	}
-	
-		
+	p2List_item<string>* secondCommand = commandSplitted.At(1);
 	
 	if (strcmp(firstCommand->data.c_str(), "quit") == 0)
 		App->scene->quitFlag();
 
 	if (strcmp(firstCommand->data.c_str(), "list") == 0)
 		listCommands();
-	if (strcmp(firstCommand->data.c_str(), "cameraSpeed") == 0)
-		App->scene->changeSpeed(p2SecondCommand);
-
 
 	if (strcmp(firstCommand->data.c_str(), "map") == 0)
 	{
@@ -740,18 +714,10 @@ void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 					App->scene->mapPreparation(command.GetString());
 			}
 		}
-		else
-		{
-			
-		}
 	}
 }
 
 void GuiConsole::LogConsole(const char* string)
 {
-	p2SString tmpStr(string);
-	p2SString strEndline("\n");
-	
-	pastTextStr.add(strEndline);
-	pastTextStr.add(tmpStr);
+	pastTextStr += string;
 }

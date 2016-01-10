@@ -2,8 +2,6 @@
 #define __j1WINDOW_H__
 
 #include "j1Module.h"
-#include "CVar.h"
-
 
 struct SDL_Window;
 struct SDL_Surface;
@@ -41,13 +39,9 @@ public:
 
 private:
 	p2SString	title;
-	iCVar*		width;
+	uint		width;
 	uint		height;
 	uint		scale;
-//Console Methods
-public:
-	void changeWidth(p2SString& width);
-
 };
 
 #endif // __j1WINDOW_H__

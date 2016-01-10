@@ -2,7 +2,7 @@
 #define __j1SCENE_H__
 
 #include "j1Module.h"
-#include "CVar.h"
+
 struct SDL_Texture;
 class GuiLabel;
 class GuiHScrollBar;
@@ -52,11 +52,7 @@ private:
 
 	GuiHScrollBar* bar;
 	GuiLabel* title;
-	fCVar* speed;
-
-public:
-	void changeSpeed(p2SString& value);
-
+	
 };
 
 #endif // __j1SCENE_H__

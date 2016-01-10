@@ -97,7 +97,7 @@ public:
 	GuiLabel(const char* text);
 	~GuiLabel();
 
-	void TextReplace(p2List<p2SString>& passedTextLis);
+	void TextReplace(const char* text);
 	void SetText(const char* text);
 	void EraseText();
 	const SDL_Texture* GetTexture() const;
@@ -185,12 +185,13 @@ private:
 
 	GuiInputText* InputConsole;
 	GuiImage* blackBackground;
-
+	GuiImage dot;
+	GuiLabel text;
 	SDL_Texture* texture;
 	void ChooseMethod(p2List<string>& commandSplitted);
 	
 
-	p2List<p2SString> pastTextStr;
+	string pastTextStr;
 	GuiLabel* pastText;
 	iPoint positionPastText;
 	
