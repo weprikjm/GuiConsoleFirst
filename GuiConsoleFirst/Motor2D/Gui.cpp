@@ -215,11 +215,22 @@ void GuiLabel::SetText(const char* text)
 	SetSize(w, h);
 }
 
-void GuiLabel::TextReplace(const char* text)
+void GuiLabel::TextReplace(p2List<p2SString>& passedTextList)
 {
 	SDL_DestroyTexture(texture);
+	p2SString textToFill;
 
-	texture = App->font->PrintConsolePassedText(text);
+	p2List_item<p2SString>* tmp = passedTextList.start;
+
+	while(tmp)
+	{
+		textToFill += tmp->data;
+		tmp = tmp->next;
+	}
+
+
+
+	texture = App->font->PrintConsolePassedText(textToFill.GetString());
 	int w, h;
 	App->tex->GetSize(texture, (uint&)w, (uint&)h);
 	SetSize(w, h);
@@ -527,11 +538,12 @@ GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, con
 	commandList.add("quit");
 	commandList.add("list");
 	commandList.add("map");
+	commandList.add("cameraSpeed");
 	
 	positionPastText = { 0, 0 };
 	//pastText->SetText(" ");
 }
-//300 i 11 coords
+
 
 
 void GuiConsole::Update(const Gui* mouse_hover, const Gui* focus)
@@ -651,16 +663,18 @@ bool GuiConsole::CheckCommand(p2SString& possibleCommand)
 
 void GuiConsole::Endline()
 {
-	pastTextStr.append(InputConsole->GetText().GetString());
+	pastTextStr.add(InputConsole->GetText());
 	
 	//InputConsole->ResetInput();
-	pastTextStr.append("\n");
+	p2SString endline;
+	endline.create("\n");
+	pastTextStr.add(endline);
 
 	App->input->FlushTextInput();
 
 
-	this->pastText->TextReplace(pastTextStr.c_str());
-	positionPastText.y -= 35;
+	this->pastText->TextReplace(pastTextStr);
+	positionPastText.y -= DEFAULT_FONT_HEIGHT;
 	this->pastText->SetLocalPos(0, positionPastText.y);
 }
 
@@ -670,7 +684,7 @@ void GuiInputText::ResetInput()
 	
 	input.create(str2->GetString());
 
-	text.TextReplace("\0");
+	//text.TextReplace("\0");
 }
 
 
@@ -735,7 +749,9 @@ void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 
 void GuiConsole::LogConsole(const char* string)
 {
-	pastTextStr += string;
-	//positionPastText.y -= 35;
-	//this->pastText->SetLocalPos(0, positionPastText.y);
+	p2SString tmpStr(string);
+	p2SString strEndline("\n");
+	
+	pastTextStr.add(strEndline);
+	pastTextStr.add(tmpStr);
 }
