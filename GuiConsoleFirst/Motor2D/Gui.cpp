@@ -637,7 +637,10 @@ bool GuiConsole::CheckCommand(p2SString& possibleCommand)
 			}
 			else
 			{
-				LOG("%s",strToEvaluate.c_str());
+
+				LOG("%s", strToEvaluate.c_str());
+				//App->scene->console->LogConsole("Holi Console\n");
+
 			}
 			App->scene->console->ChooseMethod(commandSplitted);
 			return true;
