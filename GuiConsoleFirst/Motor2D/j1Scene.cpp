@@ -32,6 +32,7 @@ bool j1Scene::Awake()
 
 void j1Scene::mapPreparation(const char* mapName)
 {
+	App->map->CleanUp();
 	if (App->map->Load(mapName) == true)
 	{
 		int w, h;
