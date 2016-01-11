@@ -694,6 +694,7 @@ void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 	p2SString p2firstCommand = firstCommand->data.c_str();
 	p2List_item<string>* secondCommand = NULL;
 	p2SString p2SecondCommand;
+
 	if (commandSplitted.count() > 1)
 	{
 		secondCommand = commandSplitted.At(1);
