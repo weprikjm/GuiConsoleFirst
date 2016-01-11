@@ -13,6 +13,7 @@
 #include "p2DynArray.h"
 #include "p2Log.h"
 #include "j1Map.h"
+#include "j1Window.h"
 
 
 // class Gui ---------------------------------------------------
@@ -488,7 +489,7 @@ p2SString& GuiInputText::GetText()
 
 
 //---Gui Console------------------------------------
-GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, const rectangle dotBox, const iPoint parsePos, int letterSize, SDL_Texture* texture, int alpha) : text(default_text), dot(texture, dotBox)
+GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, const rectangle dotBox, const iPoint parsePos, int letterSize, SDL_Texture* texture, int alpha)
 {
 	this->parsePos = parsePos;
 	this->letterSize = letterSize;
@@ -507,7 +508,11 @@ GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, con
 
 
 	if (!SDL_SetTextureAlphaMod(texture, alpha))
+	{
 		LOG("Alpha not applied");
+	//	App->scene->console->LogConsole("Alpha not applied");
+	}
+		
 
 	blackBackground = new GuiImage(texture, { 0, 0, 1024, 256 });
 
@@ -561,7 +566,7 @@ void GuiConsole::Draw() const
 	if (isVisible)
 	{
 		blackBackground->Draw();
-		dot.Draw();
+	
 		// render text
 		if (InputConsole->GetText().Length() > 0)
 			InputConsole->Draw();
@@ -620,10 +625,6 @@ bool GuiConsole::CheckCommand(p2SString& possibleCommand)
 		char* nextString;
 		string firstStr = strtok_s((char*)strToEvaluate.c_str(), " ", &nextString);
 		
-		auto it = App->consoleCommands.find(firstStr);
-
-	
-		//{
 			commandSplitted.add(firstStr);
 			size_t n = std::count(strCopy.begin(), strCopy.end(), ' ');
 
@@ -637,16 +638,14 @@ bool GuiConsole::CheckCommand(p2SString& possibleCommand)
 			}
 			else
 			{
-
 				LOG("%s", strToEvaluate.c_str());
-				//App->scene->console->LogConsole("Holi Console\n");
-
 			}
 			App->scene->console->ChooseMethod(commandSplitted);
 			return true;
-		//}
+			/*
+			auto it = 0;
 			if (it != App->consoleCommands.end())
-				return false;
+				return false;*/
 	}
 }
 
@@ -663,8 +662,6 @@ void GuiConsole::Endline()
 	this->pastText->TextReplace(pastTextStr.c_str());
 	positionPastText.y -= 35;
 	this->pastText->SetLocalPos(0, positionPastText.y);
-
-
 }
 
 void GuiInputText::ResetInput()
@@ -699,13 +696,25 @@ void GuiConsole::listCommands()
 void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 {
 	p2List_item<string>* firstCommand = commandSplitted.At(0);
-	p2List_item<string>* secondCommand = commandSplitted.At(1);
+	p2SString p2firstCommand = firstCommand->data.c_str();
+	p2List_item<string>* secondCommand = NULL;
+	p2SString p2SecondCommand;
+	if (commandSplitted.count() > 1)
+	{
+		secondCommand = commandSplitted.At(1);
+		p2SecondCommand = secondCommand->data.c_str();
+	}
+	
+		
 	
 	if (strcmp(firstCommand->data.c_str(), "quit") == 0)
 		App->scene->quitFlag();
 
 	if (strcmp(firstCommand->data.c_str(), "list") == 0)
 		listCommands();
+	if (strcmp(firstCommand->data.c_str(), "cameraSpeed") == 0)
+		App->scene->changeSpeed(p2SecondCommand);
+
 
 	if (strcmp(firstCommand->data.c_str(), "map") == 0)
 	{
@@ -717,10 +726,16 @@ void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 					App->scene->mapPreparation(command.GetString());
 			}
 		}
+		else
+		{
+			
+		}
 	}
 }
 
 void GuiConsole::LogConsole(const char* string)
 {
 	pastTextStr += string;
+	//positionPastText.y -= 35;
+	//this->pastText->SetLocalPos(0, positionPastText.y);
 }

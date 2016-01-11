@@ -185,8 +185,7 @@ private:
 
 	GuiInputText* InputConsole;
 	GuiImage* blackBackground;
-	GuiImage dot;
-	GuiLabel text;
+
 	SDL_Texture* texture;
 	void ChooseMethod(p2List<string>& commandSplitted);
 	
