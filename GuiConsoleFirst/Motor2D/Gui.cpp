@@ -501,8 +501,6 @@ GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, con
 	App->font->CalcSize("A", cursor_coords.x, cursor_coords.y);
 	cursor_coords.x = 0;
 	
-	
-
 	interactive = true;
 	can_focus = true;
 
@@ -516,7 +514,7 @@ GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, con
 
 	blackBackground = new GuiImage(texture, { 0, 0, 1024, 256 });
 
-	InputConsole = App->gui->CreateInputConsole({ 0, 0, 10, 10 }, "star wars", 128, { (parsePos.x), (parsePos.y) });
+	InputConsole = App->gui->CreateInputConsole({ 0, 0, 10, 10 }, "", 128, { (parsePos.x), (parsePos.y) });
 	InputConsole->SetLocalPos(30, 256 - cursor_coords.y);
 	
 	
@@ -527,11 +525,11 @@ GuiConsole::GuiConsole(const char* default_text, const rectangle defaultBox, con
 	commandList.add("quit");
 	commandList.add("list");
 	commandList.add("map");
-	
+	commandList.add("cameraSpeed");
+
 	positionPastText = { 0, 0 };
-	//pastText->SetText(" ");
 }
-//300 i 11 coords
+
 
 
 void GuiConsole::Update(const Gui* mouse_hover, const Gui* focus)
@@ -566,7 +564,6 @@ void GuiConsole::Draw() const
 	if (isVisible)
 	{
 		blackBackground->Draw();
-	
 		// render text
 		if (InputConsole->GetText().Length() > 0)
 			InputConsole->Draw();
@@ -575,11 +572,10 @@ void GuiConsole::Draw() const
 		pastText->Draw();
 
 		iPoint pos = GetScreenPos();
-		App->render->DrawQuad({ pos.x + (cursor_coords.x - (CURSOR_WIDTH / 2)), pos.y + 235, CURSOR_WIDTH, cursor_coords.y }, 255, 255, 255, 255, true, false);
+		App->render->DrawQuad({ pos.x + (cursor_coords.x - (CURSOR_WIDTH / 2) + 26), pos.y + 235, CURSOR_WIDTH, cursor_coords.y }, 255, 255, 255, 255, true, false);
 		const SDL_Rect rect = { 0, 0, 1024, 256 };
 		App->render->DrawQuad(rect, 0, 0, 128, 1);
 	}
-
 }
 
 void GuiConsole::ActivateConsole()
@@ -658,9 +654,8 @@ void GuiConsole::Endline()
 
 	App->input->FlushTextInput();
 
-
 	this->pastText->TextReplace(pastTextStr.c_str());
-	positionPastText.y -= 35;
+	positionPastText.y -= DEFAULT_FONT_HEIGHT;
 	this->pastText->SetLocalPos(0, positionPastText.y);
 }
 
@@ -688,7 +683,7 @@ void GuiConsole::listCommands()
 		LogConsole(commandList.At(i)->data.c_str());
 		
 		LogConsole("\n");
-		positionPastText.y -= 35;
+		positionPastText.y -= DEFAULT_FONT_HEIGHT;
 		this->pastText->SetLocalPos(0, positionPastText.y);
 	}
 }
@@ -704,8 +699,6 @@ void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 		secondCommand = commandSplitted.At(1);
 		p2SecondCommand = secondCommand->data.c_str();
 	}
-	
-		
 	
 	if (strcmp(firstCommand->data.c_str(), "quit") == 0)
 		App->scene->quitFlag();
@@ -723,7 +716,7 @@ void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 			p2SString command(secondCommand->data.c_str());
 			if (App->map->mapNames.find(&command))
 			{
-					App->scene->mapPreparation(command.GetString());
+				App->scene->mapPreparation(command.GetString());
 			}
 		}
 		else
@@ -736,6 +729,4 @@ void GuiConsole::ChooseMethod(p2List<string>& commandSplitted)
 void GuiConsole::LogConsole(const char* string)
 {
 	pastTextStr += string;
-	//positionPastText.y -= 35;
-	//this->pastText->SetLocalPos(0, positionPastText.y);
 }

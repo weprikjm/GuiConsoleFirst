@@ -51,7 +51,7 @@ bool j1Scene::Start()
 	mapPreparation("iso2.tmx");
 
 	debug_tex = App->tex->Load("maps/path2.png");
-	Gui* window = App->gui->CreateImage({0, 512, 483, 512});
+	/*Gui* window = App->gui->CreateImage({0, 512, 483, 512});
 	window->Center();
 	window->draggable = true;
 	window->interactive = true;
@@ -63,6 +63,7 @@ bool j1Scene::Start()
 	iPoint p = title->GetLocalPos();
 	title->SetLocalPos(p.x, 50);
 
+	
 	// EXERCISE 5
 	bar = App->gui->CreateHScrollBar({0, 11, 307, 11}, {805, 318, 26, 15}, {0, 0, -0, 0}, {0, 0});
 	bar->parent = window;
@@ -72,14 +73,14 @@ bool j1Scene::Start()
 	bar->interactive = true;
 	bar->can_focus = true;
 	bar->SetListener(this);
-
-	// EXERCISE 6
+	*/
+	/*// EXERCISE 6
 	GuiHScrollBar* bar2 = App->gui->CreateHScrollBar({0, 11, 307, 11}, {805, 318, 26, 15}, {-5, 0, -10, 0}, {0, -2});
 	bar2->parent = window;
 	bar2->Center();
 	bar2->interactive = true;
 	bar2->can_focus = true;
-
+	*/
 
 	int offsetSide = 6;
 	uint height;
@@ -88,15 +89,12 @@ bool j1Scene::Start()
 
 	rectangle consoleBox = {0,0,width,250};
 	rectangle dot = { 300, 11, 20, 20 };
-	iPoint parsPos = {-8,13 };
+	iPoint parsPos = {-8, 13};
 	blackBackground = App->tex->Load("GUI/consoleBlackWindowAlpha.png");
-	console = App->gui->CreateConsole("Command me",consoleBox, dot, parsPos, offsetSide, blackBackground, 128);
-
+	console = App->gui->CreateConsole("Command me", consoleBox, dot, parsPos, offsetSide, blackBackground, 128);
 
 	//CVARS
 	speed = new fCVar(200.0f);
-
-
 
 
 	return true;
@@ -168,7 +166,7 @@ bool j1Scene::Update(float dt)
 					App->map->data.tilesets.count(),
 					map_coordinates.x, map_coordinates.y);
 
-	App->win->SetTitle(title.GetString());
+	//App->win->SetTitle(title.GetString());
 
 	// Debug pathfinding ------------------------------
 	//int x, y;

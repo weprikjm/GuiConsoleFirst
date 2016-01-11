@@ -200,8 +200,6 @@ void j1App::PrepareUpdate()
 }
 
 
-
-
 // ---------------------------------------------
 void j1App::FinishUpdate()
 {
